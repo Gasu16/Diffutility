@@ -1,5 +1,3 @@
-//#include <stdio.h>
-//#include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -52,42 +50,6 @@ int getSize(int argc, char * pathname1, char * pathname2){
     return s_size;
 }
 
-int main(int argc, char **argv){
-    char * pathname1 = argv[1];
-    char * pathname2 = argv[2];
-
-    printf("\nArgs passed: %d\n\n", argc);
-    if(argc < 3 || argc > 4){
-        perror("Check your number of args passed\n\n");
-        exit(EXIT_FAILURE);
-    }
-   /*
-      Get the file size
-      if argv[3] is not defined it will assign to fsize the biggest file size
-   */
-
-    int fsize = 0; /* File size value */
-
-    if(argc == 4){ /* If 4 arguments compose the input... */
-        char * size = argv[3];
-        fsize = atoi(size);
-        if(fsize == 0){
-            perror("No number passed as arg\n\n");
-            exit(EXIT_FAILURE);
-        }
-        //printf("fsize => %d\n\n", fsize);
-    }
-
-    else{
-        fsize = getSize(argc, pathname1, pathname2); /* Invoke getSize function and assign its return value to fsize */
-    }
-
-    printf("Pathname 1 => %s\n\n", pathname1);
-    printf("Pathname 2 => %s\n\n", pathname2);
-    diff_files(pathname1, pathname2, fsize); /* Invoke diff_files function, passing the pathnames and fsize as parameters */
-    exit(EXIT_SUCCESS);
-}
-
 /* Function which checks the differences between two files */
 void diff_files(char * pathname1, char * pathname2, int fsize){
 
@@ -126,12 +88,49 @@ void diff_files(char * pathname1, char * pathname2, int fsize){
 
     /* Print the differences of each file */
     printf("Differences between the files: \n\n");
+    printf("%s ---------------------------------- %s ---------------------------------- Position\n\n", pathname1, pathname2);
     for(int i = 0; i < fsize; i++){
         if(buf1[i] != buf2[i]){
-            printf("File 1 => %c at the position %d\n\n", buf1[i], i+1);
-            printf("File 2 => %c at the position %d\n\n", buf2[i], i+1);
+            printf("%c ---------------------------------- %c ---------------------------------- %d\n\n", buf1[i], buf2[i], i+1);
+            //printf("File 2 => %c at the position %d\n\n", buf2[i], i+1);
         }
     }
 
+}
+
+int main(int argc, char **argv){
+    char * pathname1 = argv[1];
+    char * pathname2 = argv[2];
+
+    printf("\nArgs passed: %d\n\n", argc);
+    if(argc < 3 || argc > 4){
+        perror("Check your number of args passed\n\n");
+        exit(EXIT_FAILURE);
+    }
+   /*
+      Get the file size
+      if argv[3] is not defined it will assign to fsize the biggest file size
+   */
+
+    int fsize = 0; /* File size value */
+
+    if(argc == 4){ /* If 4 arguments compose the input... */
+        char * size = argv[3];
+        fsize = atoi(size);
+        if(fsize == 0){
+            perror("No number passed as arg\n\n");
+            exit(EXIT_FAILURE);
+        }
+        //printf("fsize => %d\n\n", fsize);
+    }
+
+    else{
+        fsize = getSize(argc, pathname1, pathname2); /* Invoke getSize function and assign its return value to fsize */
+    }
+
+    printf("Pathname 1 => %s\n\n", pathname1);
+    printf("Pathname 2 => %s\n\n", pathname2);
+    diff_files(pathname1, pathname2, fsize); /* Invoke diff_files function, passing the pathnames and fsize as parameters */
+    exit(EXIT_SUCCESS);
 }
 
